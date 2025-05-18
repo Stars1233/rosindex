@@ -7,25 +7,10 @@ Assumes the following are defined:
 {% endcomment %}
 
 <div class="well well-sm">
-  {% if false %}
-    <table class="table">
-      <tr>
-        <td width="100px" class="text-center">
-          <img style="width: 30px" src="{{ '/assets/repo.png' | prepend: site.baseurl }}">
-        </td>
-        <td>
-          <h5>
-            <a href="{{site.baseurl}}/r/{{ package.repo.name }}/{{ package.repo.id }}">{{ package.repo.name }}</a>
-            <small>repository</small>
-          </h5>
-        </td>
-      </tr>
-    </table>
-  {% endif %}
   <table class="table">
     <tr>
       <td width="100px" class="text-center">
-        <img style="width: 80px" src="{{ '/assets/package.png' | prepend: site.baseurl }}">
+        <img style="width: 80px" src="{{ '/assets/package.png' | prepend: site.baseurl }}"  alt="Package symbol">
       </td>
       <td>
         <h3 style="margin-top: 5px">
