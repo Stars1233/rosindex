@@ -578,8 +578,8 @@ class Indexer < Jekyll::Generator
       @package_names[package_name].tags = Set.new(@package_names[package_name].tags).merge(package_data['tags']).to_a
 
       # add this package as the default for this distro
-      if @repo_names[repo.name].default
-        dputs " --- Setting repo instance " << repo.id << "as default for package " << package_name << " in distro " << distro
+      if @repo_names[repo.name].defaults[distro]
+        dputs " --- Adding packages to repo " << repo.id << "as default for package " << package_name << " in distro " << distro
         @package_names[package_name].repos[distro] = repo
         @package_names[package_name].snapshots[distro] =  package
       end
@@ -897,7 +897,7 @@ class Indexer < Jekyll::Generator
 
         # store this repo in the name index
         @repo_names[repo.name].instances[repo.id] = repo
-        @repo_names[repo.name].default = repo
+        @repo_names[repo.name].defaults[distro] = repo
       rescue IndexException => e
         @errors[repo_item['name']] << e
       end
@@ -1049,12 +1049,8 @@ class Indexer < Jekyll::Generator
       dputs " - creating pages for repo "+repo_name+"..."
 
       # create the page for the default instance
-      site.pages << RepoPage.new(site, repo_instances, repo_instances.default, true)
+      site.pages << RepoPage.new(site, repo_instances)
 
-      # create pages for each repo instance
-      repo_instances.instances.each do |instance_id, instance|
-        site.pages << RepoPage.new(site, repo_instances, instance, false)
-      end
     end
 
     # create package pages
@@ -1077,8 +1073,11 @@ class Indexer < Jekyll::Generator
     # create rosdep pages
     puts ("Generating rosdep pages...").blue
 
+    rosdep_count = 0
     @rosdeps.each do |dep_name, full_dep_data|
       site.pages << DepPage.new(site, dep_name, raw_rosdeps[dep_name], full_dep_data)
+      rosdep_count += 1
+      break if site.config.has_key?('max_rosdeps') && rosdep_count >= site.config['max_rosdeps']
     end
 
     # populate the home page with available distros

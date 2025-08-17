@@ -92,7 +92,7 @@ end
 
 class RepoInstances < Liquid::Drop
   # This represents a group of repositories with the same name
-  attr_accessor :name, :default, :instances
+  attr_accessor :name, :defaults, :instances
   def initialize(name)
     # identifier for this repo
     @name = name
@@ -101,8 +101,8 @@ class RepoInstances < Liquid::Drop
     # these are all of the known instances of this repo
     @instances = {}
 
-    # reference to the preferred Repo instance
-    @default = nil
+    # reference to the preferred Repo instance per rosdistro
+    @defaults = {}
   end
 end
 
